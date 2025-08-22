@@ -3,5 +3,5 @@
 </script>
 
 <template>
-    <H1>Nom club</H1>
+    <h1>Nom club</h1>
 </template>
