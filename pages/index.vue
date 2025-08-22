@@ -4,6 +4,8 @@ import Position from '~/components/Position.vue';
 import type {StandingsResponse} from '~/types/football.ts';
 import { computed } from 'vue';
 
+const config = useRuntimeConfig()
+config.public.apiToken
 
 const { data, pending, error } = await useFetch<StandingsResponse>("https://api.football-data.org/v4/competitions/FL1/standings", {
   headers: {
@@ -48,45 +50,5 @@ const seasonString = computed(() => {
     <p v-if="pending">Chargement...</p>
     <p v-if="error">Erreur API</p>
     <Demo/>
-    <table>
-        <caption>
-            Front-end web developer course 2021
-        </caption>
-        <thead>
-            <tr>
-            <th >Person</th>
-            <th >Most interest in</th>
-            <th>Age</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-            <th scope="row">Chris</th>
-            <td>HTML tables</td>
-            <td>22</td>
-            </tr>
-            <tr>
-            <th scope="row">Dennis</th>
-            <td>Web accessibility</td>
-            <td>45</td>
-            </tr>
-            <tr>
-            <th scope="row">Sarah</th>
-            <td>JavaScript frameworks</td>
-            <td>29</td>
-            </tr>
-            <tr>
-            <th scope="row">Karen</th>
-            <td>Web performance</td>
-            <td>36</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-            <th scope="row" colspan="2">Average age</th>
-            <td>33</td>
-            </tr>
-        </tfoot>
-    </table>
 </template>
 
