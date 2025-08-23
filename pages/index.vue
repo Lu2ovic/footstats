@@ -1,19 +1,47 @@
 <script setup lang="ts">
-import Demo from '~/components/Demo.vue';
 import Position from '~/components/Position.vue';
 import type {StandingsResponse} from '~/types/football.ts';
-import { computed } from 'vue';
+import { computed, onMounted, onBeforeUnmount } from 'vue';
 import { table } from "~/styled-system/recipes";
 import { css } from "~/styled-system/css";
 
-const config = useRuntimeConfig()
-config.public.apiToken
+const data = useState<StandingsResponse | null>('standings', () => null);
+const pending = useState('standingsPending', () => false);
+const error = useState<Error | null>('standingsError', () => null);
 
-const { data, pending, error } = await useFetch<StandingsResponse>("https://api.football-data.org/v4/competitions/FL1/standings", {
-  headers: {
-    "X-Auth-Token": "3e97d843951d407485d76fdfcf2e4bcc"
+async function fetchStandings() {
+  pending.value = true;
+  try {
+    const { data: fetchData } = await useFetch<StandingsResponse>(
+      "https://api.football-data.org/v4/competitions/FL1/standings",
+      {
+        headers: {
+          "X-Auth-Token": "3e97d843951d407485d76fdfcf2e4bcc"
+        }
+      }
+    );
+    data.value = fetchData.value ?? null;
+  } catch (err) {
+    error.value = err as Error;
+  } finally {
+    pending.value = false;
   }
-})
+}
+
+if (!data.value) {
+  await fetchStandings();
+}
+
+let intervalId: NodeJS.Timeout;
+
+onMounted(() => {
+  // relance le fetch toutes les 5 min
+  intervalId = setInterval(fetchStandings, 5 * 60 * 1000);
+});
+
+onBeforeUnmount(() => {
+  clearInterval(intervalId);
+});
 
 const seasonString = computed(() => {
   if (!data.value?.season) return '';
@@ -21,6 +49,14 @@ const seasonString = computed(() => {
   const endYear = new Date(data.value.season.endDate).getFullYear();
   return `${startYear}/${endYear}`;
 });
+
+useSeoMeta({
+  title: 'Classement de la Ligue 1 - Saison 2025/2026',
+  ogTitle: 'Découvre le classement de la Ligue 1 édition 2025/2026',
+  description: 'Regardez à quelle position se trouve l\'équipe que vous supportez. Vous avez accès au classement ainsi qu\'au statistique de chaque club de la Ligue 1 !',
+  ogDescription: 'Accèdez au classement ainsi qu\'au statistique de chaque club de la Ligue 1 !',
+  ogImage: '/images/ogimg.png',
+})
 </script>
 
 <template>
