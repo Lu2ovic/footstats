@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { pageBg } from "~/styled-system/recipes" // ⚡ Import auto-généré par Panda
+import { pageBg } from "~/styled-system/recipes"
 </script>
 
 <template>
