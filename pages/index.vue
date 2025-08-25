@@ -57,6 +57,12 @@ useSeoMeta({
   ogDescription: 'Accèdez au classement ainsi qu\'au statistique de chaque club de la Ligue 1 !',
   ogImage: '/images/ogimg.png',
 })
+
+definePageMeta({
+  pageTransition: {
+    name: 'rotate'
+  }
+})
 </script>
 
 <template>

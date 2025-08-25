@@ -23,7 +23,7 @@ const props = defineProps<{
         <td>{{ props.stats.lost }}</td>
         <td>{{ props.stats.goalsFor }}</td>
         <td>{{ props.stats.goalsAgainst }}</td>
-        <td :class="css({color: props.stats.goalDifference > 0 ? 'green.600' : props.stats.goalDifference < 0 ? 'red.600' : 'white', fontWeight: 'bold'})">{{ props.stats.goalDifference }}</td>
+        <td :class="css({color: props.stats.goalDifference > 0 ? 'green.200' : props.stats.goalDifference < 0 ? 'red.200' : 'white', fontWeight: 'bold'})">{{ props.stats.goalDifference }}</td>
         <td>{{ props.stats.points }}</td>
     </tr>
 </template>
