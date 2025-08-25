@@ -5,30 +5,22 @@ import { computed, onMounted, onBeforeUnmount } from 'vue';
 import { table } from "~/styled-system/recipes";
 import { css } from "~/styled-system/css";
 
-const data = ref<StandingsResponse | null>(null);
-const pending = ref(false);
-const error = ref<Error | null>(null);
+const { data, pending, error } = await useAsyncData<StandingsResponse>(
+  'standingsInde', // clé unique pour cette page
+  () => $fetch('/api/standings')
+);
 
-async function fetchStandings() {
-  pending.value = true;
-  try {
-    const { data: fetchData } = await useFetch<StandingsResponse>('/api/standings');
-    data.value = fetchData.value ?? null;
-  } catch (err) {
-    error.value = err as Error;
-  } finally {
-    pending.value = false;
-  }
-}
-
-// fetch initial
-await fetchStandings();
-
+// intervalle pour rafraîchir toutes les 5 min côté client
 let intervalId: NodeJS.Timeout;
-
 onMounted(() => {
-  // relance le fetch toutes les 5 min
-  intervalId = setInterval(fetchStandings, 5 * 60 * 1000);
+  intervalId = setInterval(async () => {
+    try {
+      const freshData = await $fetch<StandingsResponse>('/api/standings');
+      data.value = freshData;
+    } catch (err) {
+      console.error(err);
+    }
+  }, 5 * 60 * 1000);
 });
 
 onBeforeUnmount(() => {
