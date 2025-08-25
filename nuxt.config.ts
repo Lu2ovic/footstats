@@ -23,11 +23,11 @@ export default defineNuxtConfig({
   ],
 
   alias: {
-    'styled-system': './styled-system', // pas besoin de createResolver
+    'styled-system': './styled-system', 
   },
 
   css: [
-    '@/assets/css/global.css', // ton CSS global avec @layer reset, base, tokens...
+    '@/assets/css/global.css', 
   ],
 
   postcss: {
