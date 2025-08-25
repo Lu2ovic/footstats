@@ -5,21 +5,14 @@ import { computed, onMounted, onBeforeUnmount } from 'vue';
 import { table } from "~/styled-system/recipes";
 import { css } from "~/styled-system/css";
 
-const data = useState<StandingsResponse | null>('standings', () => null);
-const pending = useState('standingsPending', () => false);
-const error = useState<Error | null>('standingsError', () => null);
+const data = ref<StandingsResponse | null>(null);
+const pending = ref(false);
+const error = ref<Error | null>(null);
 
 async function fetchStandings() {
   pending.value = true;
   try {
-    const { data: fetchData } = await useFetch<StandingsResponse>(
-      "https://api.football-data.org/v4/competitions/FL1/standings",
-      {
-        headers: {
-          "X-Auth-Token": "3e97d843951d407485d76fdfcf2e4bcc"
-        }
-      }
-    );
+    const { data: fetchData } = await useFetch<StandingsResponse>('/api/standings');
     data.value = fetchData.value ?? null;
   } catch (err) {
     error.value = err as Error;
@@ -28,9 +21,8 @@ async function fetchStandings() {
   }
 }
 
-if (!data.value) {
-  await fetchStandings();
-}
+// fetch initial
+await fetchStandings();
 
 let intervalId: NodeJS.Timeout;
 
@@ -60,12 +52,13 @@ useSeoMeta({
 
 definePageMeta({
   pageTransition: {
-    name: 'rotate'
+    name: 'right'
   }
 })
 </script>
 
 <template>
+  <div>
     <div v-if="data" :class="css({justifyItems: 'center', py: '4'})">
         <img :src="data.competition.emblem" :alt="`Logo de ${data.competition.name}`"  width="96" height="96"  :class="css({bg:'white', p: '1', borderRadius:'lg'})" />
         <h1>Classement de la {{ data.competition.name }} - Saison {{ seasonString }}</h1>
@@ -95,5 +88,6 @@ definePageMeta({
     </div>
     <p v-if="pending">Chargement...</p>
     <p v-if="error">Erreur API</p>
+  </div>
 </template>
 
