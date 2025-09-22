@@ -10,11 +10,12 @@ const props = defineProps<{
 
 <template>
   <h2>Joueurs</h2>
-  <div :class="css({display: 'grid',gridGap: '1', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', p:'1'})">
-    <div v-for="joueur in props.joueurs" :class="css({ bg: 'blue.500', rounded: 'lg', justifyItems: 'center', p:'1'})">
+  <div :class="css({display: 'grid',gridGap: '1', gridTemplateColumns: {base:'1fr 1fr', sm: '1fr 1fr 1fr', md: '1fr 1fr 1fr 1fr', xl:'1fr 1fr 1fr 1fr 1fr'}, p:'1'})">
+    <div v-for="joueur in props.joueurs" :class="[css({ bg: 'blue.500', rounded: 'lg', justifyItems: 'center', p:'1'}), 'group']">
       <img
         src="/public/images/sil.webp"
         alt="silhouette d'un joueur de football"
+        :class="css({transformOrigin: 'bottom',transition: '0.3s ease-out',_groupHover: {scale:'1.1'}})"
       />
       <ul>
         <li>
