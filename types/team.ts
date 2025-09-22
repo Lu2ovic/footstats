@@ -35,6 +35,7 @@ export interface Area {
     dateOfBirth: string
     nationality: string
   }
+
   
   export interface TeamResponse {
     area: Area

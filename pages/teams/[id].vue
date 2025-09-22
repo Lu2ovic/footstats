@@ -2,6 +2,7 @@
 import { useRoute } from "vue-router";
 import type { TeamResponse } from "~/types/team.ts";
 import { css } from "~/styled-system/css";
+import Equipe from "~/components/Equipe.vue";
 
 const route = useRoute();
 
@@ -64,6 +65,7 @@ definePageMeta({
                         })">Voir le classement en Ligue 1</NuxtLink>
                     </li>
                 </ul>
+                <Equipe :joueurs="data.squad"/>
             </div>
         </div>
         <p v-if="pending">Chargement...</p>
